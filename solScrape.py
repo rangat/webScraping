@@ -3,7 +3,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
+import json
 import rowData as rd
+from rowData import rowData
 import time
 import csv
 
@@ -14,10 +16,8 @@ time.sleep(2)
 numListInt = 0
 
 def putInCSV(listStuff):
-    with open('try.txt', 'a') as file:
-        for add in listStuff:
-            file.write(str(add))
-            file.write('\n')
+    with open('try.json', 'a') as outfile:
+        json.dump(listStuff, outfile)
 
 #search on first screen of copa
 def Search(phrase):
@@ -93,7 +93,7 @@ def getData():
             publication = driver.find_element_by_xpath('//*[@id="showCell_4_'+str(count)+'"]/a')
             sentence = driver.find_element_by_xpath('//*[@id="t1_'+str(count)+'"]')
 
-            listStuff.append(rd.rowData(int(resNumber.text), int(year.text), medium.text, publication.text, sentence.text))
+            listStuff.append(rd.serialze(rowData(int(resNumber.text), int(year.text), medium.text, publication.text, sentence.text)))
             if(fullCount%10 == 0):
                 print(fullCount)
             count = count + 1
@@ -127,3 +127,7 @@ getData()
 
 
 #driver.close()
+{
+    varname:varvue
+
+}

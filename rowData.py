@@ -10,3 +10,14 @@ class rowData:
 
     def __str__(self):
         return str(self.resNumber) + ', ' + str(self.year) + ', ' + self.medium + ', ' + self.publication + ', ' + self.sentence
+
+def serialze(rowData):
+    ret = {}
+
+    ret["resNumber"] = rowData.resNumber
+    ret["year"] = rowData.year
+    ret["medium"] = rowData.medium
+    ret["publication"] = rowData.publication
+    ret["sentence"] = rowData.sentence
+
+    return ret
