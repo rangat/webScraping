@@ -3,3 +3,5 @@ try.txt
 __pycache__/
 debug.log
 try.json
+data/
+.idea/
