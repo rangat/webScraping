@@ -39,7 +39,7 @@ def Search(phrase, key):
     #begin looping here
 
     #populate word/phrase
-    time.sleep(1)
+    time.sleep(2)
     word = driver.find_element_by_xpath('//*[@id="p"]')
     word.send_keys(phrase)
 
@@ -55,7 +55,7 @@ def Search(phrase, key):
     collRow = driver.find_element_by_xpath('//*[@id="cellL5"]')
     collRow.click()
 
-    time.sleep(1)
+    time.sleep(2)
 
     #search!
     search = driver.find_element_by_xpath('//*[@id="submit1"]')
@@ -108,11 +108,14 @@ def getData(phrase, key, context):
             print("Switched > element")
             nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[7]')
 
+        print(time.strftime('%a %H:%M:%S'))
         nextButton.click()
 
-        time.sleep(5)
+        time.sleep(10)
 
         nextNum = int(driver.find_element_by_xpath('//*[@id="showCell_1_1"]/a').text)
+        print("Next number after page turn is " + str(nextNum))
+        print("The previous page's first number before switching was " + str(firstNumInt))
         if(nextNum == firstNumInt):
             print("ran out of elements in " + context + " to look at.")
             run = False
@@ -123,7 +126,7 @@ def getData(phrase, key, context):
     freq = driver.find_element_by_xpath('//*[@id="label2"]')
     freq.click()
     print("clicked back to frequencies")
-    time.sleep(1)
+    time.sleep(5)
     driver.switch_to_default_content()
 
 def itThroughWords():
@@ -140,7 +143,7 @@ def itThroughWords():
         sel.click()
         driver.switch_to_default_content()
         time.sleep(10)
-        print("\tfinished clicking element " + str(num))
+        print("\tfinished clicking element " + str(num) + " --" + context)
         getData(phrase, key, context)
         itCount += 1
 
