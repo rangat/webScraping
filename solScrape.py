@@ -7,10 +7,9 @@ import json
 import rowData as rd
 from rowData import rowData
 import time
-import csv
 import os
 
-driver = webdriver.Chrome()
+driver = webdriver.Firefox()
 driver.get("https://corpus.byu.edu/coca/")
 time.sleep(2)
 
@@ -55,14 +54,23 @@ def Search(phrase, key):
     collRow = driver.find_element_by_xpath('//*[@id="cellL5"]')
     collRow.click()
 
+    options = driver.find_element_by_xpath('//*[@id="optionsRow"]/td/a[4]')
+    options.click()
+
+    hits = driver.find_element_by_xpath('//*[@id="numhits"]')
+    for i in range(0, 4):
+        hits.send_keys(Keys.BACKSPACE)
     time.sleep(2)
+    hits.send_keys('4000')
+
+    time.sleep(1)
 
     #search!
     search = driver.find_element_by_xpath('//*[@id="submit1"]')
     search.click()
     print("\tpressed search")
     driver.switch_to_default_content()
-    time.sleep(20)
+    time.sleep(60)
 
 def getData(phrase, key, context):
     print("collecting data")
@@ -72,25 +80,49 @@ def getData(phrase, key, context):
 
     run = True
     while(run):
-        firstNum = driver.find_element_by_xpath('//*[@id="showCell_1_1"]/a')
+        firstNum = driver.find_element_by_xpath('//*[@id="showCell_1_1"]')
+        
         firstNumInt = (int(firstNum.text))
 
         listStuff = []
         count = 1
         fullCount = firstNumInt
         while (count<100):
-            try:
-                resNumber = driver.find_element_by_xpath('//*[@id="showCell_1_'+str(count)+'"]/a')
-                year = driver.find_element_by_xpath('//*[@id="showCell_2_'+str(count)+'"]/a')
-                medium = driver.find_element_by_xpath('//*[@id="showCell_3_'+str(count)+'"]/a')
-                publication = driver.find_element_by_xpath('//*[@id="showCell_4_'+str(count)+'"]/a')
-                sentence = driver.find_element_by_xpath('//*[@id="t1_'+str(count)+'"]')
-            except:
-                count = 101
-                print("\tRan Out of elements to check")
-                break
+            # try:
+            resNumber = driver.find_element_by_xpath('//*[@id="showCell_1_'+str(count)+'"]/a')
+            year = driver.find_element_by_xpath('//*[@id="showCell_2_'+str(count)+'"]/a')
+            medium = driver.find_element_by_xpath('//*[@id="showCell_3_'+str(count)+'"]/a')
+            publication = driver.find_element_by_xpath('//*[@id="showCell_4_'+str(count)+'"]/a')
 
-            listStuff.append(rd.serialze(rowData(int(resNumber.text), int(year.text), medium.text, publication.text, sentence.text)))
+            num = driver.find_element_by_xpath('//*[@id="showCell_1_'+str(count)+'"]/a')
+            driver.execute_script('arguments[0].scrollIntoView(true)', num)
+            num.click()
+            time.sleep(1)
+            
+            driver.switch_to.default_content()
+            frame = driver.find_element_by_name('x4')
+            driver.switch_to.frame(frame)
+            
+            sentence = driver.find_element_by_xpath('/html/body/p[2]').text
+            time.sleep(1)
+
+            driver.switch_to.default_content()
+            frame = driver.find_element_by_name('controller')
+            driver.switch_to.frame(frame)
+            time.sleep(1)
+
+            driver.find_element_by_xpath('//*[@id="mycell3"]').click()
+
+            driver.switch_to.default_content()
+            frame = driver.find_element_by_name('x3')
+            driver.switch_to.frame(frame)
+
+            # except:
+            #     count = 101
+            #     print("\tRan Out of elements to check")
+            #     break
+
+            listStuff.append(rd.serialze(rowData(int(resNumber.text), int(year.text), medium.text, publication.text, sentence)))
             if(fullCount%10 == 0):
                 print(fullCount)
             count = count + 1
