@@ -64,61 +64,114 @@ def Search(phrase, key):
     driver.switch_to_default_content()
     time.sleep(20)
 
-def getData(phrase, key, context):
-    print("collecting data")
+def getData(phrase, key, context, start_at = None):
+    print("Started data collection on {} {} {}".format(phrase, key, context))
     #print(numListInt)
     frame = driver.find_element_by_name('x3')
     driver.switch_to.frame(frame)
 
-    run = True
-    while(run):
-        firstNum = driver.find_element_by_xpath('//*[@id="showCell_1_1"]/a')
-        firstNumInt = (int(firstNum.text))
+    if start_at:
+        run = True
+        while(run):
+            firstNum = driver.find_element_by_xpath('//*[@id="showCell_1_1"]/a')
+            firstNumInt = (int(firstNum.text))
 
-        listStuff = []
-        count = 1
-        fullCount = firstNumInt
-        while (count<100):
-            try:
-                resNumber = driver.find_element_by_xpath('//*[@id="showCell_1_'+str(count)+'"]/a')
-                year = driver.find_element_by_xpath('//*[@id="showCell_2_'+str(count)+'"]/a')
-                medium = driver.find_element_by_xpath('//*[@id="showCell_3_'+str(count)+'"]/a')
-                publication = driver.find_element_by_xpath('//*[@id="showCell_4_'+str(count)+'"]/a')
-                sentence = driver.find_element_by_xpath('//*[@id="t1_'+str(count)+'"]')
-            except:
-                count = 101
-                print("\tRan Out of elements to check")
-                break
+            listStuff = []
+            count = 1
+            fullCount = firstNumInt
+            while (count<100 and firstNumInt>start_at):
+                try:
+                    resNumber = driver.find_element_by_xpath('//*[@id="showCell_1_'+str(count)+'"]/a')
+                    year = driver.find_element_by_xpath('//*[@id="showCell_2_'+str(count)+'"]/a')
+                    medium = driver.find_element_by_xpath('//*[@id="showCell_3_'+str(count)+'"]/a')
+                    publication = driver.find_element_by_xpath('//*[@id="showCell_4_'+str(count)+'"]/a')
+                    sentence = driver.find_element_by_xpath('//*[@id="t1_'+str(count)+'"]')
+                except:
+                    count = 101
+                    print("\tRan Out of elements to check")
+                    break
 
-            listStuff.append(rd.serialze(rowData(int(resNumber.text), int(year.text), medium.text, publication.text, sentence.text)))
-            if(fullCount%10 == 0):
-                print(fullCount)
-            count = count + 1
-            fullCount = fullCount + 1
+                listStuff.append(rd.serialze(rowData(int(resNumber.text), int(year.text), medium.text, publication.text, sentence.text)))
+                if(fullCount%10 == 0):
+                    print(fullCount)
+                count = count + 1
+                fullCount = fullCount + 1
 
-        name = phrase + '_' + key + '_' + context
-        putInCSV(listStuff, name)
-        print("\twrote to txt finished")
+            name = '{}_{}_{}'.format(phrase, key, context)
+            if listStuff:
+                putInCSV(listStuff, name)
+            print("\twrote to txt finished")
 
-        #nextButton = driver.find_element_by_css_selector('//*[@id="resort"]/table/tbody/tr/td/a[6]') #//*[@id="resort"]/table/tbody/tr/td/text()[6] //*[@id="resort"]/table/tbody/tr/td/a[7]
+            #nextButton = driver.find_element_by_css_selector('//*[@id="resort"]/table/tbody/tr/td/a[6]') #//*[@id="resort"]/table/tbody/tr/td/text()[6] //*[@id="resort"]/table/tbody/tr/td/a[7]
 
-        nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[6]')
-        print("|"+nextButton.text+"|")
-        if not (nextButton.text=='>  '):
-            print("Switched > element")
-            nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[7]')
+            nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[6]')
+            print("|"+nextButton.text+"|")
+            if not (nextButton.text=='>  '):
+                print("Switched > element")
+                nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[7]')
 
-        print(time.strftime('%a %H:%M:%S'))
-        nextButton.click()
+            print(time.strftime('%a %H:%M:%S'))
+            nextButton.click()
 
-        time.sleep(10)
+            time.sleep(10)
 
-        nextNum = int(driver.find_element_by_xpath('//*[@id="showCell_1_1"]/a').text)
-        print("Next number after page turn is " + str(nextNum))
-        print("The previous page's first number before switching was " + str(firstNumInt))
-        if(nextNum == firstNumInt):
-            print("ran out of elements in " + context + " to look at.")
-            run = False
+            nextNum = int(driver.find_element_by_xpath('//*[@id="showCell_1_1"]/a').text)
+            print("Next number after page turn is " + str(nextNum))
+            print("The previous page's first number before switching was " + str(firstNumInt))
+            if(nextNum == firstNumInt):
+                print("ran out of elements in " + context + " to look at.")
+                run = False
+
+    else:
+        run = True
+        while(run):
+            firstNum = driver.find_element_by_xpath('//*[@id="showCell_1_1"]/a')
+            firstNumInt = (int(firstNum.text))
+
+            listStuff = []
+            count = 1
+            fullCount = firstNumInt
+            while (count<100 and firstNumInt>3399):
+                try:
+                    resNumber = driver.find_element_by_xpath('//*[@id="showCell_1_'+str(count)+'"]/a')
+                    year = driver.find_element_by_xpath('//*[@id="showCell_2_'+str(count)+'"]/a')
+                    medium = driver.find_element_by_xpath('//*[@id="showCell_3_'+str(count)+'"]/a')
+                    publication = driver.find_element_by_xpath('//*[@id="showCell_4_'+str(count)+'"]/a')
+                    sentence = driver.find_element_by_xpath('//*[@id="t1_'+str(count)+'"]')
+                except:
+                    count = 101
+                    print("\tRan Out of elements to check")
+                    break
+
+                listStuff.append(rd.serialze(rowData(int(resNumber.text), int(year.text), medium.text, publication.text, sentence.text)))
+                if(fullCount%10 == 0):
+                    print(fullCount)
+                count = count + 1
+                fullCount = fullCount + 1
+
+            name = '{}_{}_{}'.format(phrase, key, context)
+            putInCSV(listStuff, name)
+            print("\twrote to txt finished")
+
+            #nextButton = driver.find_element_by_css_selector('//*[@id="resort"]/table/tbody/tr/td/a[6]') #//*[@id="resort"]/table/tbody/tr/td/text()[6] //*[@id="resort"]/table/tbody/tr/td/a[7]
+
+            nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[6]')
+            print("|"+nextButton.text+"|")
+            if not (nextButton.text=='>  '):
+                print("Switched > element")
+                nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[7]')
+
+            print(time.strftime('%a %H:%M:%S'))
+            nextButton.click()
+
+            time.sleep(10)
+
+            nextNum = int(driver.find_element_by_xpath('//*[@id="showCell_1_1"]/a').text)
+            print("Next number after page turn is " + str(nextNum))
+            print("The previous page's first number before switching was " + str(firstNumInt))
+            if(nextNum == firstNumInt):
+                print("ran out of elements in " + context + " to look at.")
+                run = False
 
     driver.switch_to.default_content()
 
@@ -129,7 +182,27 @@ def getData(phrase, key, context):
     time.sleep(5)
     driver.switch_to_default_content()
 
-def itThroughWords():
+def findWord(phrase, key, cont, start_at=None):
+    frame = driver.find_element_by_name('x2')
+    driver.switch_to.frame(frame)
+    itCount = 2   #to test: change value to 101 and change while to: itCount>=100 || Should be 2 otherwise
+    while(itCount<=101):
+        num = itCount-1
+        sel = driver.find_element_by_xpath('/html/body/form/table[2]/tbody/tr['+str(itCount)+']/td[3]/a')
+        context = sel.text
+
+        if context.lower() == cont.lower():
+            print("Found context: {}".format(context))
+            sel.click()
+            driver.switch_to_default_content()
+            time.sleep(10)
+            print("\tfinished clicking element " + str(num) + " --" + context)
+            getData(phrase, key, context, start_at)
+            break
+        itCount += 1
+        
+
+def itThroughWords(phrase, key):
     itCount = 2   #to test: change value to 101 and change while to: itCount>=100 || Should be 2 otherwise
     while(itCount<=101):
         num = itCount-1
@@ -147,8 +220,8 @@ def itThroughWords():
         getData(phrase, key, context)
         itCount += 1
 
-phrase = "who"
+phrase = "how"
 key = "VERB"
 Search(phrase, key)
-itThroughWords()
+findWord(phrase, key, "know", start_at=23390)
 driver.close()
