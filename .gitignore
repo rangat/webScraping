@@ -1,7 +1,7 @@
 tryCsvShit.py
 try.txt
 __pycache__/
-debug.log
+*.log
 try.json
 data/
 .idea/
