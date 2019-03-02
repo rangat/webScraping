@@ -23,7 +23,7 @@ def putInCSV(listStuff, name):
         json.dump(listStuff, outfile)
 
 #search on first screen of copa
-def Search(phrase, key):
+def Search(phrase, key, num_hits=None):
     print("starting search")
 
     #switch to frame inside page
@@ -54,16 +54,19 @@ def Search(phrase, key):
     collRow = driver.find_element_by_xpath('//*[@id="cellL5"]')
     collRow.click()
 
-    options = driver.find_element_by_xpath('//*[@id="optionsRow"]/td/a[4]')
-    options.click()
+    if num_hits:
+        #find options button
+        options = driver.find_element_by_xpath('//*[@id="optionsRow"]/td/a[4]')
+        options.click()
 
-    hits = driver.find_element_by_xpath('//*[@id="numhits"]')
-    for i in range(0, 4):
-        hits.send_keys(Keys.BACKSPACE)
-    time.sleep(2)
-    hits.send_keys('4000')
+        #delete default text in hits txt box and then type 4000
+        hits = driver.find_element_by_xpath('//*[@id="numhits"]')
+        for i in range(0, 4):
+            hits.send_keys(Keys.BACKSPACE)
+        time.sleep(2)
+        hits.send_keys('{}'.format(num_hits))
 
-    time.sleep(1)
+        time.sleep(1)
 
     #search!
     search = driver.find_element_by_xpath('//*[@id="submit1"]')
@@ -181,6 +184,6 @@ def itThroughWords():
 
 phrase = "who"
 key = "VERB"
-Search(phrase, key)
+Search(phrase, key, 4000)
 itThroughWords()
 driver.close()
