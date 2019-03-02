@@ -10,3 +10,4 @@ scraping.pem
 scrapingStuff.pem
 .vscode/
 *.json
+*config.py
