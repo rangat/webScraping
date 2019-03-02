@@ -9,3 +9,4 @@ dataOld/
 scraping.pem
 scrapingStuff.pem
 .vscode/
+*.json
