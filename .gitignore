@@ -6,8 +6,7 @@ try.json
 data/
 .idea/
 dataOld/
-scraping.pem
-scrapingStuff.pem
+*.pem
 .vscode/
 *.json
 *config.py
