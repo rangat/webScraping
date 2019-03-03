@@ -211,6 +211,8 @@ def getData(phrase, key, context, start_at = None):
         print("clicked back to frequencies")
         time.sleep(5)
         driver.switch_to_default_content()
+    except KeyboardInterrupt:
+        sendSMSMessage("Script {phrase}_{key}_{context} was canceled at {time}".format(phrase=phrase, key=key, context=context, time=time.strftime('%a %H:%M:%S')))
     except:
         sendSMSMessage("Script {phrase}_{key}_{context} failed at {time}".format(phrase=phrase, key=key, context=context, time=time.strftime('%a %H:%M:%S')))
 
