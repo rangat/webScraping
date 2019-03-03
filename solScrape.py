@@ -128,7 +128,7 @@ def getData(phrase, key, context, start_at = None):
                 name = '{}_{}_{}'.format(phrase, key, context)
                 if listStuff:
                     putInCSV(listStuff, name)
-                print("\twrote to txt finished")
+                print("\twrote to {}.json finished".format(name))
 
                 #nextButton = driver.find_element_by_css_selector('//*[@id="resort"]/table/tbody/tr/td/a[6]') #//*[@id="resort"]/table/tbody/tr/td/text()[6] //*[@id="resort"]/table/tbody/tr/td/a[7]
 
@@ -180,7 +180,7 @@ def getData(phrase, key, context, start_at = None):
 
                 name = '{}_{}_{}'.format(phrase, key, context)
                 putInCSV(listStuff, name)
-                print("\twrote to txt finished")
+                print("\twrote to {}.json finished".format(name))
 
                 #nextButton = driver.find_element_by_css_selector('//*[@id="resort"]/table/tbody/tr/td/a[6]') #//*[@id="resort"]/table/tbody/tr/td/text()[6] //*[@id="resort"]/table/tbody/tr/td/a[7]
 
