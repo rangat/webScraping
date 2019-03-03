@@ -1,16 +1,23 @@
 import solScrape
+import sys
+from plogs import get_logger
 
-p = input("What phrase do you want to search for? ")
-w = input("What word do you want to search for (know)? ")
-start = input("What number do you want to start at? ")
+p = sys.argv[1]
+cont = sys.argv[2]
+start = sys.argv[3]
 
-if start == "":
+if start == '0':
     start = None
 else:
     start = int(start)
 
+fname='{}_{}_{}.log'.format(p, 'VERB', cont)
+
+logging = get_logger()
+logging.config(to_file=True, file_location='logs/', filename=fname, show_levels=True, show_time=True, pretty=True)
+
 phrase = p
 key = "VERB"
-solScrape.search(phrase, key)
-solScrape.findWord(phrase, key, w, start_at=start)
+solScrape.search(phrase, key, logging)
+solScrape.findWord(phrase, key, cont, logging, start_at=start)
 solScrape.closeDriver()

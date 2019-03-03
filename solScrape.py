@@ -34,13 +34,13 @@ def putInCSV(listStuff, name):
     with open('data/'+name+'.json', 'a') as outfile:
         json.dump(listStuff, outfile)
 
-def sendSMSMessage(message:str):
+def sendSMSMessage(message:str, log):
     message = twilio_client.messages.create(to='+17329978242', from_="+17325323088", body=message)
-    print("Sent message: {}".format(message))
+    log.status("Sent message: {}".format(message))
 
 #search on first screen of copa
-def search(phrase, key, num_hits=None):
-    print("starting search")
+def search(phrase, key, log, num_hits=None):
+    log.info("starting search")
 
     #switch to frame inside page
     frame = driver.find_element_by_name('x1')
@@ -87,13 +87,13 @@ def search(phrase, key, num_hits=None):
     #search!
     search = driver.find_element_by_xpath('//*[@id="submit1"]')
     search.click()
-    print("\tpressed search")
+    log.info("\tpressed search")
     driver.switch_to_default_content()
     time.sleep(20)
 
-def getData(phrase, key, context, start_at = None):
+def getData(phrase, key, context, log, start_at = None):
     try:
-        print("Started data collection on {} {} {}".format(phrase, key, context))
+        log.info("Started data collection on {} {} {}".format(phrase, key, context))
         #print(numListInt)
         frame = driver.find_element_by_name('x3')
         driver.switch_to.frame(frame)
@@ -116,39 +116,39 @@ def getData(phrase, key, context, start_at = None):
                         sentence = driver.find_element_by_xpath('//*[@id="t1_'+str(count)+'"]')
                     except:
                         count = 101
-                        print("\tRan Out of elements to check")
+                        log.warning("\tRan Out of elements to check")
                         break
 
                     listStuff.append(rd.serialze(rowData(int(resNumber.text), int(year.text), medium.text, publication.text, sentence.text)))
                     if(fullCount%10 == 0):
-                        print(fullCount)
+                        log.info(fullCount)
                     count = count + 1
                     fullCount = fullCount + 1
 
                 name = '{}_{}_{}'.format(phrase, key, context)
                 if listStuff:
                     putInCSV(listStuff, name)
-                print("\twrote to {}.json finished".format(name))
+                log.success("\twrote to {}.json finished".format(name))
 
                 #nextButton = driver.find_element_by_css_selector('//*[@id="resort"]/table/tbody/tr/td/a[6]') #//*[@id="resort"]/table/tbody/tr/td/text()[6] //*[@id="resort"]/table/tbody/tr/td/a[7]
 
                 nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[6]')
-                print("|"+nextButton.text+"|")
+                log.info("|"+nextButton.text+"|")
                 if not (nextButton.text=='>  '):
-                    print("Switched > element")
+                    log.success("Switched > element")
                     nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[7]')
 
-                print(time.strftime('%a %H:%M:%S'))
+                log.info(time.strftime('%a %H:%M:%S'))
                 nextButton.click()
 
                 time.sleep(10)
 
                 nextNum = int(driver.find_element_by_xpath('//*[@id="showCell_1_1"]/a').text)
-                print("Next number after page turn is " + str(nextNum))
-                print("The previous page's first number before switching was " + str(firstNumInt))
+                log.info("Next number after page turn is " + str(nextNum))
+                log.info("The previous page's first number before switching was " + str(firstNumInt))
                 if(nextNum == firstNumInt):
-                    print("ran out of elements in " + context + " to look at.")
-                    sendSMSMessage("Ran out of elements in {context} to look at after starting at {start_at}. \nEnding Number: {fullCount} \nTIME: {time}".format(context=context, start_at=start_at, fullCount=fullCount, time=time.strftime('%a %H:%M:%S')))
+                    log.warning("ran out of elements in " + context + " to look at.")
+                    sendSMSMessage("Ran out of elements in {context} to look at after starting at {start_at}. \nEnding Number: {fullCount} \nTIME: {time}".format(context=context, start_at=start_at, fullCount=fullCount, time=time.strftime('%a %H:%M:%S')), log)
                     run = False
 
         else:
@@ -169,38 +169,38 @@ def getData(phrase, key, context, start_at = None):
                         sentence = driver.find_element_by_xpath('//*[@id="t1_'+str(count)+'"]')
                     except:
                         count = 101
-                        print("\tRan Out of elements to check")
+                        log.warning("\tRan Out of elements to check")
                         break
 
                     listStuff.append(rd.serialze(rowData(int(resNumber.text), int(year.text), medium.text, publication.text, sentence.text)))
                     if(fullCount%10 == 0):
-                        print(fullCount)
+                        log.info(fullCount)
                     count = count + 1
                     fullCount = fullCount + 1
 
                 name = '{}_{}_{}'.format(phrase, key, context)
                 putInCSV(listStuff, name)
-                print("\twrote to {}.json finished".format(name))
+                log.success("\twrote to {}.json finished".format(name))
 
                 #nextButton = driver.find_element_by_css_selector('//*[@id="resort"]/table/tbody/tr/td/a[6]') #//*[@id="resort"]/table/tbody/tr/td/text()[6] //*[@id="resort"]/table/tbody/tr/td/a[7]
 
                 nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[6]')
-                print("|"+nextButton.text+"|")
+                log.info("|"+nextButton.text+"|")
                 if not (nextButton.text=='>  '):
-                    print("Switched > element")
+                    log.success("Switched > element")
                     nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[7]')
 
-                print(time.strftime('%a %H:%M:%S'))
+                log.info(time.strftime('%a %H:%M:%S'))
                 nextButton.click()
 
                 time.sleep(10)
 
                 nextNum = int(driver.find_element_by_xpath('//*[@id="showCell_1_1"]/a').text)
-                print("Next number after page turn is " + str(nextNum))
-                print("The previous page's first number before switching was " + str(firstNumInt))
+                log.info("Next number after page turn is " + str(nextNum))
+                log.info("The previous page's first number before switching was " + str(firstNumInt))
                 if(nextNum == firstNumInt):
-                    print("ran out of elements in " + context + " to look at.")
-                    sendSMSMessage("Ran out of elements in {context} to look at. \nEnding Number: {fullCount} \nTIME: {time}".format(context=context, fullCount= fullCount, time=time.strftime('%a %H:%M:%S')))
+                    log.warning("ran out of elements in " + context + " to look at.")
+                    sendSMSMessage("Ran out of elements in {context} to look at. \nEnding Number: {fullCount} \nTIME: {time}".format(context=context, fullCount= fullCount, time=time.strftime('%a %H:%M:%S')), log)
                     run = False
 
         driver.switch_to.default_content()
@@ -208,15 +208,15 @@ def getData(phrase, key, context, start_at = None):
         driver.switch_to.frame(driver.find_element_by_xpath('/html/frameset/frameset/frame'))
         freq = driver.find_element_by_xpath('//*[@id="label2"]')
         freq.click()
-        print("clicked back to frequencies")
+        log.info("clicked back to frequencies")
         time.sleep(5)
         driver.switch_to_default_content()
     except KeyboardInterrupt:
-        sendSMSMessage("Script {phrase}_{key}_{context} was canceled at {time}".format(phrase=phrase, key=key, context=context, time=time.strftime('%a %H:%M:%S')))
+        sendSMSMessage("Script {phrase}_{key}_{context} was canceled at {time}".format(phrase=phrase, key=key, context=context, time=time.strftime('%a %H:%M:%S')), log)
     except:
-        sendSMSMessage("Script {phrase}_{key}_{context} failed at {time}".format(phrase=phrase, key=key, context=context, time=time.strftime('%a %H:%M:%S')))
+        sendSMSMessage("Script {phrase}_{key}_{context} failed at {time}".format(phrase=phrase, key=key, context=context, time=time.strftime('%a %H:%M:%S')), log)
 
-def findWord(phrase, key, cont, start_at=None):
+def findWord(phrase, key, cont, log, start_at=None):
     frame = driver.find_element_by_name('x2')
     driver.switch_to.frame(frame)
     itCount = 2   #to test: change value to 101 and change while to: itCount>=100 || Should be 2 otherwise
@@ -226,21 +226,21 @@ def findWord(phrase, key, cont, start_at=None):
         context = sel.text
 
         if context.lower() == cont.lower():
-            print("Found context: {}".format(context))
+            log.success("Found context: {}".format(context))
             sel.click()
             driver.switch_to_default_content()
             time.sleep(10)
-            print("\tfinished clicking element " + str(num) + " --" + context)
-            getData(phrase, key, context, start_at)
+            log.success("\tfinished clicking element " + str(num) + " --" + context)
+            getData(phrase, key, context, log, start_at)
             break
         itCount += 1
         
 
-def itThroughWords(phrase, key):
+def itThroughWords(phrase, key, log):
     itCount = 2   #to test: change value to 101 and change while to: itCount>=100 || Should be 2 otherwise
     while(itCount<=101):
         num = itCount-1
-        print("clicking element " + str(num))
+        log.info("clicking element " + str(num))
         #switch frames
         frame = driver.find_element_by_name('x2')
         driver.switch_to.frame(frame)
@@ -250,8 +250,8 @@ def itThroughWords(phrase, key):
         sel.click()
         driver.switch_to_default_content()
         time.sleep(10)
-        print("\tfinished clicking element " + str(num) + " --" + context)
-        getData(phrase, key, context)
+        log.success("\tfinished clicking element " + str(num) + " --" + context)
+        getData(phrase, key, context, log)
         itCount += 1
 
 def closeDriver():
