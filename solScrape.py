@@ -94,6 +94,7 @@ def search(phrase, key, log, num_hits=None):
 def getData(phrase, key, context, log, start_at = None):
     try:
         log.info("Started data collection on {} {} {}".format(phrase, key, context))
+        log.info("Start at number: {}".format(start_at))
         #print(numListInt)
         frame = driver.find_element_by_name('x3')
         driver.switch_to.frame(frame)
@@ -107,7 +108,7 @@ def getData(phrase, key, context, log, start_at = None):
                 listStuff = []
                 count = 1
                 fullCount = firstNumInt
-                while (count<100 and firstNumInt>start_at):
+                while (count<100 and firstNumInt>=start_at):
                     try:
                         resNumber = driver.find_element_by_xpath('//*[@id="showCell_1_'+str(count)+'"]/a')
                         year = driver.find_element_by_xpath('//*[@id="showCell_2_'+str(count)+'"]/a')
@@ -121,7 +122,7 @@ def getData(phrase, key, context, log, start_at = None):
 
                     listStuff.append(rd.serialze(rowData(int(resNumber.text), int(year.text), medium.text, publication.text, sentence.text)))
                     if(fullCount%10 == 0):
-                        log.info(fullCount)
+                        log.info(str(fullCount))
                     count = count + 1
                     fullCount = fullCount + 1
 
@@ -160,7 +161,7 @@ def getData(phrase, key, context, log, start_at = None):
                 listStuff = []
                 count = 1
                 fullCount = firstNumInt
-                while (count<100 and firstNumInt>3399):
+                while (count<100):
                     try:
                         resNumber = driver.find_element_by_xpath('//*[@id="showCell_1_'+str(count)+'"]/a')
                         year = driver.find_element_by_xpath('//*[@id="showCell_2_'+str(count)+'"]/a')
@@ -174,7 +175,7 @@ def getData(phrase, key, context, log, start_at = None):
 
                     listStuff.append(rd.serialze(rowData(int(resNumber.text), int(year.text), medium.text, publication.text, sentence.text)))
                     if(fullCount%10 == 0):
-                        log.info(fullCount)
+                        log.info(str(fullCount))
                     count = count + 1
                     fullCount = fullCount + 1
 
