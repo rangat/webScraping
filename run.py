@@ -6,7 +6,8 @@ start = input("What number do you want to start at? ")
 
 if start == "":
     start = None
-print(start)
+else:
+    start = int(start)
 
 phrase = p
 key = "VERB"
