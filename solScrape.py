@@ -133,11 +133,14 @@ def getData(phrase, key, context, log, start_at = None):
 
                 #nextButton = driver.find_element_by_css_selector('//*[@id="resort"]/table/tbody/tr/td/a[6]') #//*[@id="resort"]/table/tbody/tr/td/text()[6] //*[@id="resort"]/table/tbody/tr/td/a[7]
 
-                nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[6]')
-                log.info("|"+nextButton.text+"|")
-                if not (nextButton.text=='>  '):
-                    log.success("Switched > element")
-                    nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[7]')
+                nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[1]')
+                i = 1
+                while(True):
+                    nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[{}]'.format(i))
+                    if ('>' in nextButton.text):
+                        log.success("Switched > element")
+                        break
+                    i += 1
 
                 log.info(time.strftime('%a %H:%M:%S'))
                 nextButton.click()
@@ -185,11 +188,14 @@ def getData(phrase, key, context, log, start_at = None):
 
                 #nextButton = driver.find_element_by_css_selector('//*[@id="resort"]/table/tbody/tr/td/a[6]') #//*[@id="resort"]/table/tbody/tr/td/text()[6] //*[@id="resort"]/table/tbody/tr/td/a[7]
 
-                nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[6]')
-                log.info("|"+nextButton.text+"|")
-                if not (nextButton.text=='>  '):
-                    log.success("Switched > element")
-                    nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[7]')
+                nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[1]')
+                i = 1
+                while(True):
+                    nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[{}]'.format(i))
+                    if ('>' in nextButton.text):
+                        log.success("Switched > element")
+                        break
+                    i += 1
 
                 log.info(time.strftime('%a %H:%M:%S'))
                 nextButton.click()
