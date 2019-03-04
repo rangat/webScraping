@@ -77,7 +77,7 @@ def search(phrase, key, log, num_hits=None):
 
         #delete default text in hits txt box and then type 4000
         hits = driver.find_element_by_xpath('//*[@id="numhits"]')
-        for i in range(0, 4):
+        for _ in range(0, 4):
             hits.send_keys(Keys.BACKSPACE)
         time.sleep(2)
         hits.send_keys('{}'.format(num_hits))
@@ -149,7 +149,7 @@ def getData(phrase, key, context, log, start_at = None):
                 log.info("The previous page's first number before switching was " + str(firstNumInt))
                 if(nextNum == firstNumInt):
                     log.warning("ran out of elements in " + context + " to look at.")
-                    sendSMSMessage("Ran out of elements in {context} to look at after starting at {start_at}. \nEnding Number: {fullCount} \nTIME: {time}".format(context=context, start_at=start_at, fullCount=fullCount, time=time.strftime('%a %H:%M:%S')), log)
+                    sendSMSMessage("Ran out of elements in {context} - {phrase} to look at after starting at {start_at}. \nEnding Number: {fullCount} \nTIME: {time}".format(context=context, phrase=phrase, start_at=start_at, fullCount=fullCount, time=time.strftime('%a %H:%M:%S')), log)
                     run = False
 
         else:
@@ -201,7 +201,7 @@ def getData(phrase, key, context, log, start_at = None):
                 log.info("The previous page's first number before switching was " + str(firstNumInt))
                 if(nextNum == firstNumInt):
                     log.warning("ran out of elements in " + context + " to look at.")
-                    sendSMSMessage("Ran out of elements in {context} to look at. \nEnding Number: {fullCount} \nTIME: {time}".format(context=context, fullCount= fullCount, time=time.strftime('%a %H:%M:%S')), log)
+                    sendSMSMessage("Ran out of elements in {context} - {phrase} to look at. \nEnding Number: {fullCount} \nTIME: {time}".format(context=context, phrase=phrase, fullCount= fullCount, time=time.strftime('%a %H:%M:%S')), log)
                     run = False
 
         driver.switch_to.default_content()
@@ -221,7 +221,7 @@ def findWord(phrase, key, cont, log, start_at=None):
     frame = driver.find_element_by_name('x2')
     driver.switch_to.frame(frame)
     itCount = 2   #to test: change value to 101 and change while to: itCount>=100 || Should be 2 otherwise
-    while(itCount<=101):
+    while(itCount<=1000):
         num = itCount-1
         sel = driver.find_element_by_xpath('/html/body/form/table[2]/tbody/tr['+str(itCount)+']/td[3]/a')
         context = sel.text
