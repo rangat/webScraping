@@ -12,7 +12,7 @@ if start == 0:
 fname='{}_{}_{}.log'.format(phrase, 'VERB', cont)
 
 logging = get_logger()
-logging.config(to_file=True, file_location='logs/', filename=fname, show_levels=True, show_time=True, pretty=True)
+logging.config(to_file=True, file_location='logs/', filename=fname, show_levels=True, show_time=True, pretty=False)
 
 key = "VERB"
 solScrape.search(phrase, key, logging, num_hits=1000)
