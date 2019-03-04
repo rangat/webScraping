@@ -11,3 +11,4 @@ dataOld/
 *.json
 *config.py
 *.out
+remote_data/
