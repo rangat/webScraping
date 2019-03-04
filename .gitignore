@@ -10,3 +10,4 @@ dataOld/
 .vscode/
 *.json
 *config.py
+*.out
