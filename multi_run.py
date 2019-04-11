@@ -37,7 +37,6 @@ def run(num):
         driver.close()
     except Exception as e:
         logging.error(e)
-        print("Exception: {}".format(e))
 
 with Pool(10) as p:
-    print(p.map(run, range(1, 1001)))
+    p.map(run, range(1, 1001))
