@@ -226,7 +226,6 @@ def getData(phrase, key, context, log, driver, start_at = None):
 def findWord(phrase, key, cont, log, driver, start_at=None):
     frame = driver.find_element_by_name('x2')
     driver.switch_to.frame(frame)
-    print('Test')
     itCount = 2   #to test: change value to 101 and change while to: itCount>=100 || Should be 2 otherwise
     while(itCount<=1000):
         num = itCount-1
@@ -235,7 +234,6 @@ def findWord(phrase, key, cont, log, driver, start_at=None):
             sel = driver.find_element_by_xpath('/html/body/form/table[2]/tbody/tr['+str(itCount)+']/td[3]/a')
             context = sel.text
             context_num = int(sel_num.text)
-            print(context_num)
 
             if cont == context_num:
                 log.success("Found context: {} number: {}".format(context, context_num))
