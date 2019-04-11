@@ -63,11 +63,11 @@ def search(phrase, key, log, num_hits=None):
     coll.send_keys(key)
 
     #make five visible
-    show = driver.find_element_by_xpath('//*[@id="collocatesSpanRow"]/td/table/tbody/tr/td[1]/a')
+    show = driver.find_element_by_xpath('//*[@id="collocatesSpanRow"]/td/table/tbody/tr/td[23]/a')
     show.click()
 
-    #select five before
-    collRow = driver.find_element_by_xpath('//*[@id="cellL5"]')
+    #select five before/after (L for before, R for after)
+    collRow = driver.find_element_by_xpath('//*[@id="cellR5"]')
     collRow.click()
 
     if num_hits:
@@ -226,20 +226,37 @@ def getData(phrase, key, context, log, start_at = None):
 def findWord(phrase, key, cont, log, start_at=None):
     frame = driver.find_element_by_name('x2')
     driver.switch_to.frame(frame)
+    print('Test')
     itCount = 2   #to test: change value to 101 and change while to: itCount>=100 || Should be 2 otherwise
     while(itCount<=1000):
         num = itCount-1
-        sel = driver.find_element_by_xpath('/html/body/form/table[2]/tbody/tr['+str(itCount)+']/td[3]/a')
-        context = sel.text
+        if type(cont) == int:
+            sel_num = driver.find_element_by_xpath('/html/body/form/table[2]/tbody/tr['+str(itCount)+']/td[1]')
+            sel = driver.find_element_by_xpath('/html/body/form/table[2]/tbody/tr['+str(itCount)+']/td[3]/a')
+            context = sel.text
+            context_num = int(sel_num.text)
+            print(context_num)
 
-        if context.lower() == cont.lower():
-            log.success("Found context: {}".format(context))
-            sel.click()
-            driver.switch_to_default_content()
-            time.sleep(10)
-            log.success("\tfinished clicking element " + str(num) + " --" + context)
-            getData(phrase, key, context, log, start_at)
-            break
+            if cont == context_num:
+                log.success("Found context: {} number: {}".format(context, context_num))
+                sel.click()
+                driver.switch_to_default_content()
+                time.sleep(10)
+                log.success("\tfinished clicking element " + str(context_num) + " --" + context)
+                getData(phrase, key, context, log, start_at)
+                break
+        else:
+            sel = driver.find_element_by_xpath('/html/body/form/table[2]/tbody/tr['+str(itCount)+']/td[3]/a')
+            context = sel.text
+
+            if context.lower() == cont.lower():
+                log.success("Found context: {}".format(context))
+                sel.click()
+                driver.switch_to_default_content()
+                time.sleep(10)
+                log.success("\tfinished clicking element " + str(num) + " --" + context)
+                getData(phrase, key, context, log, start_at)
+                break
         itCount += 1
         
 
