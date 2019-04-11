@@ -39,7 +39,7 @@ def sendSMSMessage(message:str, log):
     log.status("Sent message: {}".format(message))
 
 #search on first screen of copa
-def search(phrase, key, log, num_hits=None):
+def search(phrase, key, log, driver, num_hits=None):
     log.info("starting search")
 
     #switch to frame inside page
@@ -91,7 +91,7 @@ def search(phrase, key, log, num_hits=None):
     driver.switch_to_default_content()
     time.sleep(20)
 
-def getData(phrase, key, context, log, start_at = None):
+def getData(phrase, key, context, log, driver, start_at = None):
     try:
         log.info("Started data collection on {} {} {}".format(phrase, key, context))
         log.info("Start at number: {}".format(start_at))
@@ -223,7 +223,7 @@ def getData(phrase, key, context, log, start_at = None):
     except:
         sendSMSMessage("Script {phrase}_{key}_{context} failed at {time}".format(phrase=phrase, key=key, context=context, time=time.strftime('%a %H:%M:%S')), log)
 
-def findWord(phrase, key, cont, log, start_at=None):
+def findWord(phrase, key, cont, log, driver, start_at=None):
     frame = driver.find_element_by_name('x2')
     driver.switch_to.frame(frame)
     print('Test')
@@ -243,7 +243,7 @@ def findWord(phrase, key, cont, log, start_at=None):
                 driver.switch_to_default_content()
                 time.sleep(10)
                 log.success("\tfinished clicking element " + str(context_num) + " --" + context)
-                getData(phrase, key, context, log, start_at)
+                getData(phrase, key, context, log, driver, start_at)
                 break
         else:
             sel = driver.find_element_by_xpath('/html/body/form/table[2]/tbody/tr['+str(itCount)+']/td[3]/a')
@@ -255,12 +255,12 @@ def findWord(phrase, key, cont, log, start_at=None):
                 driver.switch_to_default_content()
                 time.sleep(10)
                 log.success("\tfinished clicking element " + str(num) + " --" + context)
-                getData(phrase, key, context, log, start_at)
+                getData(phrase, key, context, log, driver, start_at)
                 break
         itCount += 1
         
 
-def itThroughWords(phrase, key, log):
+def itThroughWords(phrase, key, log, driver):
     itCount = 2   #to test: change value to 101 and change while to: itCount>=100 || Should be 2 otherwise
     while(itCount<=101):
         num = itCount-1
@@ -275,8 +275,8 @@ def itThroughWords(phrase, key, log):
         driver.switch_to_default_content()
         time.sleep(10)
         log.success("\tfinished clicking element " + str(num) + " --" + context)
-        getData(phrase, key, context, log)
+        getData(phrase, key, context, log, driver)
         itCount += 1
 
-def closeDriver():
+def closeDriver(driver):
     driver.close()
