@@ -12,3 +12,5 @@ dataOld/
 *config.py
 *.out
 remote_data/
+.DS_Store
+new_data/
