@@ -52,7 +52,7 @@ def pool_handler(phrases:tuple):
     p = Pool(10)
     p.map(run, phrases)
 
-def get_freqencies(phrase):
+def get_freqencies(phrase, driver):
     fname='{}_frequencies.log'.format(phrase)
     logging = get_logger()
     logging.config(to_file=True, file_location='logs/', filename=fname, show_levels=True, show_time=True, pretty=False)
@@ -97,6 +97,9 @@ def generate_frequencies_dict(phrase):
 
 
 
-# init_driver()
-# get_freqencies(phrase)
-# generate_frequencies_dict(phrase)
+driver = init_driver()
+get_freqencies(phrase, driver)
+
+contexts = generate_frequencies_dict(phrase)
+
+pool_handler(tuple(contexts))
