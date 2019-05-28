@@ -51,8 +51,6 @@ def search(phrase, key, log, driver, num_hits=None):
     #print(elem)
     tab_switch.click()
 
-    #begin looping here
-
     #populate word/phrase
     time.sleep(2)
     word = driver.find_element_by_xpath('//*[@id="p"]')
@@ -89,7 +87,9 @@ def search(phrase, key, log, driver, num_hits=None):
     search.click()
     log.info("\tpressed search")
     driver.switch_to_default_content()
+    log.info("Start 20 sec sleep")
     time.sleep(20)
+    log.info("End 20 sec sleep")
 
 def getData(phrase, key, context, log, driver, start_at = None):
     try:
@@ -253,7 +253,6 @@ def findWord(phrase, key, cont, log, driver, start_at=None):
                 driver.switch_to_default_content()
                 time.sleep(10)
                 log.success("\tfinished clicking element " + str(num) + " --" + context)
-                getData(phrase, key, context, log, driver, start_at)
                 break
         itCount += 1
         
@@ -278,3 +277,48 @@ def itThroughWords(phrase, key, log, driver):
 
 def closeDriver(driver):
     driver.close()
+
+def save_htmls(phrase, key, context, log, driver, start_at=1):
+    frame = driver.find_element_by_name('x3')
+    driver.switch_to.frame(frame)
+
+    log.info('Started save_html')
+    directory = 'html/{phrase}_{key}_{context}/'.format(phrase=phrase, key=key, context=context)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    
+    run = True
+    cnt = 1
+    while(run):
+        firstNum = int(driver.find_element_by_xpath('//*[@id="showCell_1_1"]/a').text)
+
+        if cnt >= start_at:
+            fname = '{dir}{cnt}.html'.format(dir=directory, cnt=cnt)
+            with open(fname, 'w') as w:
+                w.write(driver.page_source)
+                log.info('Wrote {}'.format(fname))
+
+        # Click the next button
+        nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[1]')
+        i = 1
+        while(True):
+            nextButton = driver.find_element_by_xpath('//*[@id="resort"]/table/tbody/tr/td/a[{}]'.format(i))
+            if ('>' in nextButton.text):
+                log.success("Switched > element")
+                break
+            i += 1
+        log.info(time.strftime('%a %H:%M:%S'))
+        nextButton.click()
+        cnt += 1
+
+        # Wait for page to refresh
+        log.info('\tStart 10 sec sleep')
+        time.sleep(10)
+        log.info('\tEnd 10 sec sleep')
+
+        nextNum = int(driver.find_element_by_xpath('//*[@id="showCell_1_1"]/a').text)
+        log.info("Next number after page turn is " + str(nextNum))
+        log.info("The previous page's first number before switching was " + str(firstNum))
+        if(nextNum == firstNum):
+            log.warning("ran out of elements in " + context + " to look at.")
+            run = False
